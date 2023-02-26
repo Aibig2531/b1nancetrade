@@ -60,9 +60,18 @@ def main():
         df['EMA55'] = ta.EMA(df["close_LP"], timeperiod=55)
         df['PEV_EMA21'] = df['EMA21'].shift(1)
         df['PEV_EMA55'] = df['EMA55'].shift(1)
-
+        
         df.loc[(df['PEV_EMA21'] < df['EMA55']) & (df['EMA21'] > df['EMA55']),'EMA_Signal'] = 'LONG'
         df.loc[(df['PEV_EMA21'] > df['EMA55']) & (df['EMA21'] < df['EMA55']),'EMA_Signal'] = 'SHORT'
+        df.loc[df['EMA21'] > df['EMA55'],'Trend'] ='UP'
+        df.loc[df['EMA21'] < df['EMA55'],'Trend'] ='DOWN'
+
+        print("-----------------------------")
+        print("Last Price : " +str(df['close_LP'][len(df.index)-1]))
+        print("balance : " +str(df_bal['balance'].values[0]))  
+        print("Trend Market : "+str(df['Trend'][len(df.index)-1]))
+        print("Order : "+str(df['EMA_Signal'][len(df.index)-1]))
+        print("-----------------------------")   
 
 
 if __name__ == "__main__":
