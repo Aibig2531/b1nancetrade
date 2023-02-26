@@ -15,28 +15,28 @@ leverage = "20"
 client = Client(api_key,secret_key)
 
 
-def Short(symbol,amount):
-    #short order
+def ordershort(symbol,amount):
+    #short
     client.futures_create_order(symbol=symbol,side='SELL',type='MARKET',quantity=str(amount))
 
-def sl_short(symbol,amount,stopPrice):   
-    #sl-short order
+def ordersl_short(symbol,amount,stopPrice):   
+    #sl-short
     client.futures_create_order(symbol=symbol,side='BUY',type='STOP_MARKET',stopPrice=float(stopPrice),quantity=str(amount) ,closePosition='true')
 
-def cl_short(symbol,amount):
-    #close short order
+def ordercl_short(symbol,amount):
+    #close short
     client.futures_create_order(symbol=symbol,side='BUY',type='MARKET',quantity=str(amount))
 
-def long(symbol,amount):
-    #short order
+def orderlong(symbol,amount):
+    #short
     client.futures_create_order(symbol=symbol,side='BUY',type='MARKET',quantity=str(amount))
 
-def sl_long(symbol,amount,stopPrice):   
-    #sl-long order
+def ordersl_long(symbol,amount,stopPrice):   
+    #sl-long
     client.futures_create_order(symbol=symbol,side='SELL',type='STOP_MARKET',stopPrice=float(stopPrice),quantity=str(amount) ,closePosition='true')
 
-def cl_long(symbol,amount):
-    #close long order
+def ordercl_long(symbol,amount):
+    #close long
     client.futures_create_order(symbol=symbol,side='BUY',type='MARKET',quantity=str(amount))
 
 
