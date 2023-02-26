@@ -58,20 +58,26 @@ def main():
         #EMA21 and EMA55 strategy
         df['EMA21'] = ta.EMA(df["close_LP"], timeperiod=21)
         df['EMA55'] = ta.EMA(df["close_LP"], timeperiod=55)
+        df['EMA100'] = ta.EMA(df["close_LP"], timeperiod=55)
         df['PEV_EMA21'] = df['EMA21'].shift(1)
-        df['PEV_EMA55'] = df['EMA55'].shift(1)
-        
-        df.loc[(df['PEV_EMA21'] < df['EMA55']) & (df['EMA21'] > df['EMA55']),'EMA_Signal'] = 'LONG'
-        df.loc[(df['PEV_EMA21'] > df['EMA55']) & (df['EMA21'] < df['EMA55']),'EMA_Signal'] = 'SHORT'
-        df.loc[df['EMA21'] > df['EMA55'],'Trend'] ='UP'
-        df.loc[df['EMA21'] < df['EMA55'],'Trend'] ='DOWN'
+
+        pos_long = (df['PEV_EMA21'][len(df.index)-1] < df['EMA55'][len(df.index)-1]) and (df['EMA21'][len(df.index)-1] > df['EMA55'][len(df.index)-1])
+        pos_short = (df['PEV_EMA21'][len(df.index)-1] > df['EMA55'][len(df.index)-1]) and (df['EMA21'][len(df.index)-1] < df['EMA55'][len(df.index)-1]) 
+
+        df.loc[(df['EMA100'] > df['EMA21']),'Trend'] ='DOWN'
+        df.loc[(df['EMA100'] < df['EMA21']),'Trend'] ='UP'
 
         print("-----------------------------")
         print("Last Price : " +str(df['close_LP'][len(df.index)-1]))
         print("balance : " +str(df_bal['balance'].values[0]))  
         print("Trend Market : "+str(df['Trend'][len(df.index)-1]))
-        print("Order : "+str(df['EMA_Signal'][len(df.index)-1]))
-        print("-----------------------------")   
+        if pos_long :
+            print("Order : LONG")            
+        elif pos_short:
+            print("Order : SHORT")
+        else :
+            print("Order : Wait")                   
+        print("-----------------------------")     
 
 
 if __name__ == "__main__":
