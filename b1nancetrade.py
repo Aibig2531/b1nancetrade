@@ -1,10 +1,6 @@
 from binance.client import Client
 import pandas as pd
-import configparser
 import talib as ta
-import os
-import time
-import numpy as np
 
 
 api_key = ""
@@ -58,6 +54,15 @@ def main():
 
         #leverage setting
         client.futures_change_leverage(symbol=symbol, leverage = int(leverage))
+
+        #EMA21 and EMA55 strategy
+        df['EMA21'] = ta.EMA(df["close_LP"], timeperiod=21)
+        df['EMA55'] = ta.EMA(df["close_LP"], timeperiod=55)
+        df['PEV_EMA21'] = df['EMA21'].shift(1)
+        df['PEV_EMA55'] = df['EMA55'].shift(1)
+
+        df.loc[(df['PEV_EMA21'] < df['EMA55']) & (df['EMA21'] > df['EMA55']),'EMA_Signal'] = 'LONG'
+        df.loc[(df['PEV_EMA21'] > df['EMA55']) & (df['EMA21'] < df['EMA55']),'EMA_Signal'] = 'SHORT'
 
 
 if __name__ == "__main__":
